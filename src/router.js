@@ -6,11 +6,12 @@ import xhr from 'xhr'
 import Layout from './layout'
 import PublicPage from './pages/public'
 import ReposPage from './pages/repos'
+import RepoDetail from './pages/repo-detail'
 
 export default Router.extend({
     renderPage(page, opts = {layout: true}) {
         if (opts.layout) {
-            page = (<Layout>
+            page = (<Layout me={app.me}>
                 {page}
             </Layout>)
         }
@@ -22,6 +23,8 @@ export default Router.extend({
         '': 'public',
         'repos': 'repos',
         'login': 'login',
+        'logout': 'logout',
+        'repo/:owner/:name': 'repoDetail',
         'auth/callback?:query': 'authCallback'
     },
 
@@ -30,7 +33,12 @@ export default Router.extend({
     },
 
     repos() {
-        this.renderPage(<ReposPage />)
+        this.renderPage(<ReposPage repos={app.me.repos} />)
+    },
+
+    repoDetail(owner, name) {
+        const model = app.me.repos.getByFullName(`${owner}/${name}`)
+        this.renderPage(<RepoDetail repo={model} labels={model.labels} />)
     },
 
     login() {
@@ -49,6 +57,13 @@ export default Router.extend({
             json: true
         }, (err, req, body) => {
             app.me.token = body.token
+            this.redirectTo('/repos')
         })
-    }
+    },
+
+    logout() {
+        window.localStorage.clear()
+        window.location = '/'
+    },
+
 })
