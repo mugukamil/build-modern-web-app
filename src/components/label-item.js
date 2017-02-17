@@ -1,6 +1,17 @@
 import React from 'react'
+import ampersandMixin from 'ampersand-react-mixin'
 
 export default React.createClass({
+    mixins: [ampersandMixin],
+
+    onEditClick(evt) {
+        this.props.label.editing = true
+    },
+
+    onCancelClick(evt) {
+        this.props.label.editing = false
+    },
+
     render() {
         const {label} = this.props
         const cssColor = `#${label.color}`
@@ -13,7 +24,7 @@ export default React.createClass({
                 <input name='name'/>
                 <input name='color'/>
                 <button type='submit' className='button button-small'>Save</button>
-                <button type='button' className='button button-small button-unstyled'>cancel</button>
+                <button type='button' className='button button-small button-unstyled' onClick={this.onCancelClick}>cancel</button>
             </form>
             )
         } else {
@@ -21,7 +32,7 @@ export default React.createClass({
             <div className='label'>
                 <span className='label-color' style={{ backgroundColor: cssColor }}>&nbsp;</span>
                 <span>{label.name}</span>
-                <span className='octicon octicon-pencil'></span>
+                <span className='octicon octicon-pencil' onClick={this.onEditClick}></span>
                 <span className='octicon octicon-x'></span>
             </div>
             )
