@@ -5,11 +5,16 @@ export default React.createClass({
     mixins: [ampersandMixin],
 
     onEditClick(evt) {
-        this.props.label.editing = true
+        evt.preventDefault()
+        this.props.label.destroy()
     },
 
     onCancelClick(evt) {
         this.props.label.editing = false
+    },
+
+    onDeleteClick(evt) {
+        this.props.label
     },
 
     render() {
@@ -33,7 +38,7 @@ export default React.createClass({
                 <span className='label-color' style={{ backgroundColor: cssColor }}>&nbsp;</span>
                 <span>{label.name}</span>
                 <span className='octicon octicon-pencil' onClick={this.onEditClick}></span>
-                <span className='octicon octicon-x'></span>
+                <span className='octicon octicon-x' onClick={this.onDeleteClick}></span>
             </div>
             )
         }
