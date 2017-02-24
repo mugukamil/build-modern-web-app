@@ -10,8 +10,15 @@ export default React.createClass({
 
     onCancelClick(evt) {
         evt.preventDefault()
-        this.props.label.editing = false
-        this.setState(this.getInitialState())
+        const {label} = this.props
+
+        if (label.saved) {
+            label.editing = false
+            this.setState(this.getInitialState())
+        } else {
+            label.destroy()
+        }
+
     },
 
     onDeleteClick(evt) {
@@ -43,7 +50,16 @@ export default React.createClass({
     onSubmit(evt) {
         evt.preventDefault()
         const {label} = this.props
-        label.update(this.state)
+
+        if (label.saved) {
+            label.update(this.state)
+        } else {
+            label.save(this.state, {
+                success() {
+                    label.saved = true
+                }
+            })
+        }
         label.editing = false
     },
 
@@ -79,3 +95,10 @@ export default React.createClass({
         )
     }
 })
+
+
+function add(a:number, b:number) {
+    return a + b
+}
+
+add('hello', 'world')
